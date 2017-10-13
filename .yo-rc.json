@@ -1,0 +1,8 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "version": "1.3.1",
+    "libraryName": "cgk-list-placeholder",
+    "libraryId": "8612ad9c-8fd7-44f6-9655-99e2ff847a2f",
+    "environment": "spo"
+  }
+}

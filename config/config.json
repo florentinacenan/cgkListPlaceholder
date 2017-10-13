@@ -1,0 +1,31 @@
+{
+  "$schema": "https://dev.office.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "cgk-list-placeholder-application-customizer": {
+      "components": [
+        {
+          "entrypoint": "./lib/extensions/cgkListPlaceholder/CgkListPlaceholderApplicationCustomizer.js",
+          "manifest": "./src/extensions/cgkListPlaceholder/CgkListPlaceholderApplicationCustomizer.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {
+    "jquery": {
+  "path": "https://code.jquery.com/jquery-2.2.4.min.js",
+  "globalName": "jQuery"
+},
+ "bootstrap": {
+  "path": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js",
+  "globalName": "jQuery"
+ },
+  "dropdown": {
+  "path": "/node_modules/bootstrap/js/dropdown.js",
+  "globalName": "bootstrap"
+ }
+  },
+  "localizedResources": {
+    "CgkListPlaceholderApplicationCustomizerStrings": "lib/extensions/cgkListPlaceholder/loc/{locale}.js"
+  }
+}

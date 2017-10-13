@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+    <CustomAction
+        Title="CgkListPlaceholder"
+        Location="ClientSideExtension.ApplicationCustomizer"
+        ClientSideComponentId="fc6643c2-2726-4643-a921-4b2ff8746f25"
+        ClientSideComponentProperties="{}">
+    </CustomAction>
+</Elements>
