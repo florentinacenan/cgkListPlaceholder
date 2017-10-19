@@ -1,4 +1,5 @@
 {
   "$schema": "https://dev.office.com/json-schemas/spfx-build/write-manifests.schema.json",
-  "cdnBasePath": "https://cenandevmsdn.sharepoint.com/CDN/cgkListPlaceHolder"
+  "cdnBasePath": "https://publiccdn.sharepointonline.com/cgk.sharepoint.com/sites/devflorentina/CDN/cgkListPlaceHolder"
 }
+

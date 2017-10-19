@@ -4,10 +4,10 @@ const build = require('@microsoft/sp-build-web');
 const sppkgDeploy = require('node-sppkg-deploy');
 
 const environmentInfo = {
-  "username": "florentina@cenandevmsdn.onmicrosoft.com",
-  "password": "Flopo10g",
-  "tenant": "cenandevmsdn",
-  "catalogSite": "sites/AppCat"
+  "username": "florentinac@cgk.onmicrosoft.com",
+  "password": "Flopo15g",
+  "tenant": "cgk",
+  "catalogSite": "sites/AppCatalog"
 };
 
 build.task('deploy-sppkg', {

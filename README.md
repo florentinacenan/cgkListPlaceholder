@@ -42,8 +42,26 @@ gulp serve --nobrowser
 ?loadSPFX=true&debugManifestsFile=https://localhost:4321/temp/manifests.js&customActions={"fc6643c2-2726-4643-a921-4b2ff8746f25":{"location":"ClientSideExtension.ApplicationCustomizer","properties":{}}}
 
 ##Deploy to SharePoint
+
 gulp bundle --ship
 gulp package-solution --ship
 gulp upload-to-sharepoint --ship
 gulp upload-app-pkg
-gulp deploy sppkg
+gulp deploy-sppkg
+
+##PS Script to add Web Property to SPO Web for testing:
+$webUrl = "https://cgk.sharepoint.com/sites/devflorentina"
+$username = "florentinac@cgk.onmicrosoft.com"
+$password = Read-Host -Prompt "Enter your password: " -AsSecureString
+$ctx = New-Object Microsoft.SharePoint.Client.ClientContext($webUrl)
+$ctx.Credentials = New-Object Microsoft.SharePoint.Client.SharePointOnlineCredentials($username,$password)
+$allProperties = $ctx.Site.RootWeb.AllProperties
+$ctx.Load($allProperties)
+$ctx.ExecuteQuery()
+$allProperties['CGKListQueueEndpoint']= "https://dummyAzureEndpointUrl"
+$ctx.Site.RootWeb.Update()
+$ctx.ExecuteQuery()
+
+
+##Steps to host extension from CDN
+https://docs.microsoft.com/en-us/sharepoint/dev/spfx/extensions/get-started/hosting-extension-from-office365-cdn

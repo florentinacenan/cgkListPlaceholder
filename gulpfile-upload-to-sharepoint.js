@@ -5,10 +5,10 @@ const build = require('@microsoft/sp-build-web');
 const spsync = require('gulp-spsync-creds').sync;
 
 const environmentInfo = {
-  "username": "florentina@cenandevmsdn.onmicrosoft.com",
-  "password": "Flopo10g",
-  "tenant": "cenandevmsdn",
-  "site": "https://cenandevmsdn.sharepoint.com",
+  "username": "florentinac@cgk.onmicrosoft.com",
+  "password": ""**yourpasswordhere**"",
+  "tenant": "cgk",
+  "site": "https://cgk.sharepoint.com/sites/devflorentina/",
   "libraryPath": "CDN/cgkListPlaceHolder",
 };
 

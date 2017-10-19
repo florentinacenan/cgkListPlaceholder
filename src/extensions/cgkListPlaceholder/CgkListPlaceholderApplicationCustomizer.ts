@@ -16,9 +16,10 @@ import {
 } from '@microsoft/sp-http';
 import { SPComponentLoader } from '@microsoft/sp-loader';
 import styles from './AppCustomizer.module.scss';
+import { loadStyles } from '@microsoft/load-themed-styles'; 
 import { escape } from '@microsoft/sp-lodash-subset';
 import * as $ from 'jquery';
-import * as bootstrap from 'bootstrap';
+//import * as bootstrap from 'bootstrap';
 //import * as dropdown from 'bootstrap';
 // require('../../../node_modules/jquery/dist/jquery.min.js');
 //require('../../../node_modules/bootstrap/dist/js/bootstrap.min.js');
@@ -27,8 +28,17 @@ import * as bootstrap from 'bootstrap';
 // SPComponentLoader.loadScript('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js',  { globalExportsName: 'jQuery' }).then((): void => {        
       // });
     //});
-SPComponentLoader.loadCss('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css');
+//SPComponentLoader.loadCss('https://publiccdn.sharepointonline.com/techmikael.sharepoint.com/11510075fe4212d19d3e6d07c91981263dd697bf111cb1e5f0efb15de0ec08b382cde399/5.0.1/office-ui-fabric.min.css');
+SPComponentLoader.loadCss('https://appsforoffice.microsoft.com/fabric/2.2.0/fabric.components.min.css');
+//SPComponentLoader.loadCss('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css');
 import * as strings from 'CgkListPlaceholderApplicationCustomizerStrings';
+//import * as React from 'react';
+//import * as ReactDOM from 'react-dom';
+//import { Fabric } from 'office-ui-fabric-react/lib/Fabric';
+//import * as fabric from 'office-ui-fabric';
+//import { DefaultButton, IconButton, IButtonProps,  PrimaryButton, CommandButton, Button, Label } from 'office-ui-fabric-react';
+//import { DefaultButton } from 'office-ui-fabric/lib/Button';
+
 const LOG_SOURCE: string = 'CgkListPlaceholderApplicationCustomizer';
 
 /**
@@ -41,12 +51,14 @@ export interface ICgkListPlaceholderApplicationCustomizerProperties {
  Top : string;
 }
 
+
+
 /** A Custom Action which can be run during execution of a Client Side Application */
 export default class CgkListPlaceholderApplicationCustomizer
   extends BaseApplicationCustomizer<ICgkListPlaceholderApplicationCustomizerProperties> {
 
  private _topPlaceholder: PlaceholderContent | undefined;
-  //private _bottomPlaceholder: PlaceholderContent | undefined;
+  
 
   @override
   public onInit(): Promise<void> {
@@ -98,35 +110,23 @@ export default class CgkListPlaceholderApplicationCustomizer
       if (this._topPlaceholder.domElement) {
         this._topPlaceholder.domElement.innerHTML = `
               <div class="${styles.app}">
-                <div class="ms-bgColor-themeDark ms-fontColor-white ${styles.top}">
-                              <div class="btn-group">
-                                <div class="cgk-list-btn" style="display:inline-block">
-                                  <button id = "saveSiteBtn">Save Site as Template</button>
-                                  </div>
-                                  <div class="cgk-list-btn" style="display:inline-block">
-                                  <button id="upgradeSiteBtn">Upgrade Site</button>
-                                  </div>
-                                  <div class="cgk-list-btn" style="display:inline-block">
-                                  <button id="archiveSiteBtn">Archive Site</button>
-                                  </div>
-                                </div>  
-                                <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Dropdown
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-    <button class="dropdown-item" type="button">Action</button>
-    <button class="dropdown-item" type="button">Another action</button>
-    <button class="dropdown-item" type="button">Something else here</button>
-  </div>
-</div> 
-<div class="dropdown">
-    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Dropdown <b class="caret"></b></a>
-    <ul class="dropdown-menu">
-        <li><a href="#">Action</a></li>
-        <li><a href="#">Another action</a></li>
-    </ul>
-</div>               
+                <div class="ms-bgColor-themeDark ms-fontColor-white ms-Grid-row ${styles.top}">
+                  
+                  
+                          <button class="ms-Button ms-Grid-col ms-sm6 ms-md4 ms-lg2" id="saveSiteBtn"> 
+                                    <span class="ms-Button-label">Save as template</span>
+                                    <span class="ms-Button-description">Saves current CGKList Site as a template</span> 
+                          </button>
+                          <button class="ms-Button ms-Grid-col ms-sm6 ms-md4 ms-lg2" id="upgradeSiteBtn"> 
+                                    <span class="ms-Button-label">Upgrade Site</span>
+                                    <span class="ms-Button-description">Upgrades current CGKList Site</span> 
+                          </button>
+								          <button class="ms-Button ms-Grid-col ms-sm6 ms-md4 ms-lg2" id="archiveSiteBtn"> 
+                                    <span class="ms-Button-label">Archive Site</span>
+                                    <span class="ms-Button-description">Archives current CGKList Site</span> 
+                          </button>
+                                 
+                                
                   </div>
                 </div>`;
                 this._topPlaceholder.domElement.querySelector('#saveSiteBtn').addEventListener('click', ()=>{this._saveSite(cgkListUrl);});
