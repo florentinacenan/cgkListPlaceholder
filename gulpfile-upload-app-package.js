@@ -6,7 +6,7 @@ const spsync = require('gulp-spsync-creds').sync;
 
 const environmentInfo = {
   "username": "florentinac@cgk.onmicrosoft.com",
-  "password": "**yourpasswordhere**",
+  "password": "Flopo15g",
   "tenant": "cgk",
   "catalogSite": "sites/AppCatalog"
 }
