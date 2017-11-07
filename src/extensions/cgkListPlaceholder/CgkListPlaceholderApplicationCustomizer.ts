@@ -56,6 +56,8 @@ export default class CgkListPlaceholderApplicationCustomizer
     //Check the Permissions and webProperties
     console.log('The web template for this site is: ' + this.context.pageContext.web.templateName.toString());
     console.log('This user has ManageWeb permission on this web: ' + this.context.pageContext.web.permissions.hasPermission(SPPermission.manageWeb));
+    var tenantRoot = this.context.pageContext.site.absoluteUrl.replace(this.context.pageContext.site.serverRelativeUrl,"");
+    console.log(tenantRoot);
     this.context.spHttpClient.get(`${this.context.pageContext.web.absoluteUrl}/_api/web/AllProperties?$select=CGKListQueueEndpoint`,
       SPHttpClient.configurations.v1)
       .then((response: SPHttpClientResponse) => {
@@ -100,7 +102,9 @@ export default class CgkListPlaceholderApplicationCustomizer
         const element: React.ReactElement<ICgkListUIButtonsProps> = React.createElement(
           CGKListUIContextualMenuIconExample,
           {
-            context: this.context
+            context: this.context,
+            cgkListUrlEndpoint: cgkListUrl
+
           }
         );
         ReactDOM.render(element, this._topPlaceholder.domElement);
@@ -108,57 +112,9 @@ export default class CgkListPlaceholderApplicationCustomizer
     }
 
   }
-  private _saveSite(cgkListUrl):void{
-console.log("Clicked Save button");
-var action = "GetSite";
-var url = this.context.pageContext.web.absoluteUrl;    
-var restUrl = cgkListUrl + "/webjob/"+action+"?fullurl="+url;
-this.context.httpClient.get(restUrl, HttpClient.configurations.v1,{}).then((response: HttpClientResponse) => {
-        response.json().then((responseJSON: any) => {
-          console.log(responseJSON);
-        });
-});
-  }
-    private _upgradeSite(cgkListUrl):void{
-console.log("Clicked Upgrade button");
-var action = "UpgradeSite";
-var url = this.context.pageContext.web.absoluteUrl;    
-var restUrl = cgkListUrl + "/webjob/"+action+"?fullurl="+url;
-this.context.httpClient.get(restUrl, HttpClient.configurations.v1,{}).then((response: HttpClientResponse) => {
-        response.json().then((responseJSON: any) => {
-          console.log(responseJSON);
-        });
-});
-  }
-    private _archiveSite(cgkListUrl):void{
-console.log("Clicked Archive button");
-var action = "ArchiveSite";
-var url = this.context.pageContext.web.absoluteUrl;    
-var restUrl = cgkListUrl + "/webjob/"+action+"?fullurl="+url;
-this.context.httpClient.get(restUrl, HttpClient.configurations.v1,{}).then((response: HttpClientResponse) => {
-        response.json().then((responseJSON: any) => {
-          console.log(responseJSON);
-        });
-});
-  }  
-  
 
-// jQuery('#saveSiteBtn').on('click', function(event) {
-//   event.preventDefault(); // To prevent following the link (optional)
-//  console.log("Clicked Save button");
-//   var restUrl = cgkListUrl;
-//   this.context.HttpClient
-// });
-// jQuery('#upgradeSiteBtn').on('click', function(event) {
-//   event.preventDefault(); // To prevent following the link (optional)
-//  console.log("Clicked Upgrade button");
-// });
-// jQuery('#archiveSiteBtn').on('click', function(event) {
-//   event.preventDefault(); // To prevent following the link (optional)
-//  console.log("Clicked Archive button");
-// });
 
- // }
+
   private _onDispose(): void {
     console.log('[CgkListPlaceholderApplicationCustomizer._onDispose] Disposed custom top and bottom placeholders.');
   }

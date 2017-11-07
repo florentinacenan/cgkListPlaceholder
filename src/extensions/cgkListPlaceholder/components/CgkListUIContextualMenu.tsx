@@ -1,8 +1,16 @@
-import * as React from 'react';
+import * as React from 'react';import {
+  SPHttpClient,
+  SPHttpClientConfiguration,
+  SPHttpClientResponse,
+  HttpClient,
+  HttpClientConfiguration,
+  HttpClientResponse
+} from '@microsoft/sp-http';
 import { ContextualMenuItemType } from 'office-ui-fabric-react/lib/ContextualMenu';
 import { Callout } from 'office-ui-fabric-react/lib/Callout';
 import { DefaultButton, IconButton, IButtonProps } from 'office-ui-fabric-react/lib/Button';
 import {ICgkListUIButtonsProps, ICgkListUIButtonsState} from './ICgkListUIButtons';
+
 
 export default class CGKListUIContextualMenuIconExample extends React.Component<ICgkListUIButtonsProps, ICgkListUIButtonsState> {
 
@@ -27,6 +35,9 @@ export default class CGKListUIContextualMenuIconExample extends React.Component<
             items: [
               {
                 key: 'Save Site As Template',
+                onClick: () => {
+                  this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"GetSite");
+                },
                 iconProps: {
                   iconName: 'Pinned'
                 },
@@ -35,7 +46,7 @@ export default class CGKListUIContextualMenuIconExample extends React.Component<
               {
                 key: 'Upgrade Site',
                 onClick: () => {
-                  this.setState({ showCallout: true });
+                  this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"UpgradeSite");
                 },
                 iconProps: {
                   iconName: 'Pinned'
@@ -45,8 +56,11 @@ export default class CGKListUIContextualMenuIconExample extends React.Component<
               },
               {
                 key: 'Archive Site',
+                onClick: () => {
+                  this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"ArchiveSite");
+                },
                 iconProps: {
-                  iconName: 'Package'                 
+                  iconName: 'Savings'                 
                 },
                 name: 'Archive Site'
               }             
@@ -70,4 +84,17 @@ export default class CGKListUIContextualMenuIconExample extends React.Component<
       </div>
     );
   }
+
+ 
+        private _callCGkListAzureEndpoint(context,cgkListUrl,action):void{
+    console.log("Clicked "+action+" button");    
+    var url = context.pageContext.web.absoluteUrl;    
+    var restUrl = cgkListUrl + "/webjob/"+action+"?fullurl="+url;
+    context.httpClient.get(restUrl, HttpClient.configurations.v1,{}).then((response: HttpClientResponse) => {
+            response.json().then((responseJSON: any) => {
+              this.setState({ showCallout: true });
+              console.log(responseJSON);
+            });
+    });
+      }   
 }
