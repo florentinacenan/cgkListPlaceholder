@@ -23,7 +23,7 @@ import * as strings from 'CgkListPlaceholderApplicationCustomizerStrings';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Icon, IconType } from 'office-ui-fabric-react/lib/Icon';
-import CGKListUIButtonSplit from './components/CgkListUIButtons';
+//import CGKListUIButtonSplit from './components/CgkListUIButtons';
 import CGKListUIContextualMenuIconExample from './components/CgkListUIContextualMenu';
 import { IButtonProps} from 'office-ui-fabric-react/lib/Button';
 import {ICgkListUIButtonsProps} from "./components/ICgkListUIButtons";
@@ -58,17 +58,37 @@ export default class CgkListPlaceholderApplicationCustomizer
     console.log('This user has ManageWeb permission on this web: ' + this.context.pageContext.web.permissions.hasPermission(SPPermission.manageWeb));
     var tenantRoot = this.context.pageContext.site.absoluteUrl.replace(this.context.pageContext.site.serverRelativeUrl,"");
     console.log(tenantRoot);
-    this.context.spHttpClient.get(`${this.context.pageContext.web.absoluteUrl}/_api/web/AllProperties?$select=CGKListQueueEndpoint`,
+    this.context.spHttpClient.get(`${this.context.pageContext.web.absoluteUrl}/_api/web/AllProperties?$select=CGK_WEBCONNECTION`,
       SPHttpClient.configurations.v1)
       .then((response: SPHttpClientResponse) => {
         response.json().then((responseJSON: any) => {
           console.log(responseJSON);
-          if (this.context.pageContext.web.permissions.hasPermission(SPPermission.manageWeb) && responseJSON['CGKListQueueEndpoint'] != null) {
-            cgkListUrl = responseJSON['CGKListQueueEndpoint'];
+          if (this.context.pageContext.web.permissions.hasPermission(SPPermission.manageWeb) && responseJSON['CGK_x005f_WEBCONNECTION'] != null) {
+            // cgkListUrl = responseJSON['CGK_x005f_WEBCONNECTION'];
+
+            this.context.spHttpClient.get(tenantRoot + `/_api/web/AllProperties?$select=CGKListQueueEndpoint`,
+            SPHttpClient.configurations.v1)
+            .then((response: SPHttpClientResponse) => {
+              response.json().then((responseJSON: any) => {
+                console.log(responseJSON);
+                if (responseJSON['CGKListQueueEndpoint'] != null) {
+                  console.log(responseJSON['CGKListQueueEndpoint']);
+                  cgkListUrl = responseJSON['CGKListQueueEndpoint'];
+                  // Added to handle possible changes on the existence of placeholders.
+                  //this.context.placeholderProvider.changedEvent.add(this, this._renderPlaceHolders;            
+                  // Call render method for generating the HTML elements.
+                  this._renderPlaceHolders(cgkListUrl);
+      
+                }
+              });
+            }); 
+
+
+
             // Added to handle possible changes on the existence of placeholders.
             //this.context.placeholderProvider.changedEvent.add(this, this._renderPlaceHolders;            
             // Call render method for generating the HTML elements.
-            this._renderPlaceHolders(cgkListUrl);
+            // this._renderPlaceHolders(cgkListUrl);
 
           }
         });

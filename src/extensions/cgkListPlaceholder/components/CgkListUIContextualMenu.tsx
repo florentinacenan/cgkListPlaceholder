@@ -89,7 +89,7 @@ export default class CGKListUIContextualMenuIconExample extends React.Component<
         private _callCGkListAzureEndpoint(context,cgkListUrl,action):void{
     console.log("Clicked "+action+" button");    
     var url = context.pageContext.web.absoluteUrl;    
-    var restUrl = cgkListUrl + "/webjob/"+action+"?fullurl="+url;
+    var restUrl = cgkListUrl + "webjob/"+action+"?fullurl="+url;
     context.httpClient.get(restUrl, HttpClient.configurations.v1,{}).then((response: HttpClientResponse) => {
             response.json().then((responseJSON: any) => {
               this.setState({ showCallout: true });
