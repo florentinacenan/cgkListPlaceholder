@@ -9,6 +9,6 @@ export interface ICgkListUIButtonsProps
 }
 
 export interface ICgkListUIButtonsState {
-    showCallout: boolean ;
+    showMessage: boolean ;
   }
   

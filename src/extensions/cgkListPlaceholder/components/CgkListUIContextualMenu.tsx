@@ -10,6 +10,10 @@ import { ContextualMenuItemType } from 'office-ui-fabric-react/lib/ContextualMen
 import { Callout } from 'office-ui-fabric-react/lib/Callout';
 import { DefaultButton, IconButton, IButtonProps } from 'office-ui-fabric-react/lib/Button';
 import {ICgkListUIButtonsProps, ICgkListUIButtonsState} from './ICgkListUIButtons';
+import * as strings from 'CgkListPlaceholderApplicationCustomizerStrings';
+import { Link } from 'office-ui-fabric-react/lib/Link';
+import { Label } from 'office-ui-fabric-react/lib/Label';
+import { MessageBar, MessageBarType } from 'office-ui-fabric-react/lib/MessageBar';
 
 
 export default class CGKListUIContextualMenuIconExample extends React.Component<ICgkListUIButtonsProps, ICgkListUIButtonsState> {
@@ -17,69 +21,66 @@ export default class CGKListUIContextualMenuIconExample extends React.Component<
   constructor(props: ICgkListUIButtonsProps) {
     super(props);
     this.state = {
-      showCallout: false
+      showMessage: false
     };
   }
 
   public render() {
-    let { showCallout } = this.state;
+    let { showMessage } = this.state;
     
     return (
       <div>
         <DefaultButton
         
           id='ContextualMenuButton2'
-          text='CGKListUIFeatures'
+          text = {strings.RootButton.toString()}
           menuProps={ {
             shouldFocusOnMount: true,
             items: [
               {
-                key: 'Save Site As Template',
+                key: strings.SaveButton,
                 onClick: () => {
+                  this.setState({ showMessage: true });
                   this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"GetSite");
                 },
                 iconProps: {
                   iconName: 'Pinned'
                 },
-                name: 'Save Site as Template'
+                name: strings.SaveButton
               },
               {
-                key: 'Upgrade Site',
+                key: strings.UpgradeButton,
                 onClick: () => {
-                  this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"UpgradeSite");
+                  this.setState({ showMessage: true });
+                  this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"UpgradeSite");                  
                 },
                 iconProps: {
                   iconName: 'Pinned'
                 },
-                name: 'Upgrade Site',
-                title: 'Upgrade Site'
+                name: strings.UpgradeButton,
+                
               },
               {
-                key: 'Archive Site',
+                key: strings.ArchiveButton,
                 onClick: () => {
+                  this.setState({ showMessage: true });
                   this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"ArchiveSite");
                 },
                 iconProps: {
-                  iconName: 'Savings'                 
+                  iconName: 'Pinned'                 
                 },
-                name: 'Archive Site'
+                name: strings.ArchiveButton
               }             
             ]
           }
           }
         />
-        { showCallout && (
-          <Callout
-            setInitialFocus={ true }
-            // tslint:disable-next-line:jsx-no-lambda
-            onDismiss={ () => this.setState({ showCallout: false }) }
-          >
-            <DefaultButton
-              // tslint:disable-next-line:jsx-no-lambda
-              onClick={ () => this.setState({ showCallout: false }) }
-              text='Hello Popup'
-            />
-          </Callout>
+        { showMessage && (
+          <MessageBar            
+            onDismiss={ () => this.setState({ showMessage: false })} 
+            onClick={ () => this.setState({ showMessage: false }) } >
+            {strings.SuccessMessage} Test         
+          </MessageBar>
         ) }
       </div>
     );
@@ -92,7 +93,7 @@ export default class CGKListUIContextualMenuIconExample extends React.Component<
     var restUrl = cgkListUrl + "webjob/"+action+"?fullurl="+url;
     context.httpClient.get(restUrl, HttpClient.configurations.v1,{}).then((response: HttpClientResponse) => {
             response.json().then((responseJSON: any) => {
-              this.setState({ showCallout: true });
+              this.setState({ showMessage: true });
               console.log(responseJSON);
             });
     });

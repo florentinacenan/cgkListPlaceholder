@@ -53,7 +53,7 @@ gulp deploy-sppkg
 ```
 ##PS Script to add Web Property to SPO Web for testing:
 ```
-$webUrl = "https://cgk.sharepoint.com/sites/devflorentina"
+$webUrl = "https://cgk.sharepoint.com/sites/devflorentina/dutch"
 $username = "florentinac@cgk.onmicrosoft.com"
 $password = Read-Host -Prompt "Enter your password: " -AsSecureString
 $ctx = New-Object Microsoft.SharePoint.Client.ClientContext($webUrl)
