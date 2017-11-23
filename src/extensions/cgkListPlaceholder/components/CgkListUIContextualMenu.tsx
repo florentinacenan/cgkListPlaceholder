@@ -124,7 +124,7 @@ export default class CGKListUIContextualMenuIconExample extends React.Component<
     })
       .catch ((response: any) => {
         let errMsg: string = `WARNING - error when calling URL ${restUrl}. Error = ${response.message}`;
-        this.setState({ message: errMsg});
+        this.setState({ message: errMsg });
         this.setState({ showMessage: true });
         console.log(errMsg);
       });
