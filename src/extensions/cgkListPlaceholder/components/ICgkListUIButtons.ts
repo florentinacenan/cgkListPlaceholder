@@ -10,5 +10,6 @@ export interface ICgkListUIButtonsProps
 
 export interface ICgkListUIButtonsState {
     showMessage: boolean ;
+    message:string;
   }
   
