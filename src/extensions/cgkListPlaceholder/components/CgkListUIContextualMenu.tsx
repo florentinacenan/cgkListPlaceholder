@@ -22,13 +22,35 @@ export default class CGKListUIContextualMenuIconExample extends React.Component<
     super(props);
     this.state = {
       showMessage: false,
-      message:" "
+      message:" ",
+      cgkListStatus:props.cgkListStatus,
+      greyButton:false,
+      hasPermission: props.hasPermission,
     };
   }
 
+ public verifyCgkListStatus(cgkListStatus):void{
+switch(cgkListStatus)
+{
+  case 'actief':
+    this.setState({ greyButton: false });
+    return;
+  case 'archief':
+    this.setState({ greyButton: true });
+    this.setState({ message: strings.SiteIsArchivedMessage });
+    this.setState({ showMessage: true });
+    console.log( strings.SiteIsArchivedMessage);
+    return;
+   
+
+}
+
+ }
+
   public render() {
     let { showMessage } = this.state;
-    
+    this.verifyCgkListStatus(this.props.cgkListStatus);
+    if (this.state.hasPermission){
     return (
       <div>
         <DefaultButton
@@ -70,7 +92,8 @@ export default class CGKListUIContextualMenuIconExample extends React.Component<
                 iconProps: {
                   iconName: 'Pinned'                 
                 },
-                name: strings.ArchiveButton
+                name: strings.ArchiveButton,
+                disabled: this.state.greyButton
               }             
             ]
           }
@@ -86,49 +109,47 @@ export default class CGKListUIContextualMenuIconExample extends React.Component<
       </div>
     );
   }
+  else{
+    return (
+      <div>        
+        { showMessage && (
+          <MessageBar            
+            onDismiss={ () => this.setState({ showMessage: false })}>
+            {this.state.message}}      
+          </MessageBar>
+        ) }
+      </div>
+    );
 
- 
-    //     private _callCGkListAzureEndpoint(context,cgkListUrl,action):void{
-    // console.log("Clicked "+action+" button");    
-    // var url = context.pageContext.web.absoluteUrl;    
-    // var restUrl = cgkListUrl + "webjob/"+action+"?fullurl="+url;
-    // context.httpClient.get(restUrl, HttpClient.configurations.v1,{}).then((response: HttpClientResponse) => {
-    //         response.json().then((responseJSON: any) => {
-    //           this.setState({ message: strings.SuccessMessage});
-    //           this.setState({ showMessage: true });
-    //           console.log(responseJSON);
-    //         });
-    // });
-    //   }   
+  }
+  }
 
-
-      private _callCGkListAzureEndpoint(context,cgkListUrl,action):void{
-        console.log("Clicked "+action+" button");    
-        var url = context.pageContext.web.absoluteUrl;    
-        var restUrl = cgkListUrl + "webjob/"+action+"?fullurl="+url;
-        var response;
-        context.httpClient.get(restUrl, HttpClient.configurations.v1,{}).then((response: HttpClientResponse) => {
-          response.json().then((responseJSON: JSON) => {
-            var responseText = JSON.stringify(responseJSON);
-          if (response.ok) {
-            this.setState({ message: strings.SuccessMessage});
-            this.setState({ showMessage: true });
-            console.log(responseText);
-        } else {
-          this.setState({ message: strings.FailMessage});
+     private _callCGkListAzureEndpoint(context,cgkListUrl,action):void{
+      console.log("Clicked "+action+" button");    
+      var url = context.pageContext.web.absoluteUrl;    
+      var restUrl = cgkListUrl + "webjob/"+action+"?fullurl="+url;
+      var response;
+      context.httpClient.get(restUrl, HttpClient.configurations.v1,{}).then((response: HttpClientResponse) => {
+         if (response.ok) {
+          this.setState({ message: strings.SuccessMessage });
           this.setState({ showMessage: true });
-          console.log(response.json().toString());
-        }
-        
-      });
-    })
-      .catch ((response: any) => {
-        let errMsg: string = `WARNING - error when calling URL ${restUrl}. Error = ${response.message}`;
-        this.setState({ message: errMsg });
+          console.log(strings.SuccessMessage);
+      } 
+        else {
+        this.setState({ message: strings.FailMessage });
         this.setState({ showMessage: true });
-        console.log(errMsg);
-      });
-                   
-        
-          }   
+        console.log(response.statusText + strings.FailMessage);
+      }
+      
+   
+  })
+      .catch ((response: any) => {
+      let errMsg: string = `${strings.FailMessage} ${restUrl}. Error = ${response.message}`;
+      this.setState({ message: errMsg });
+      this.setState({ showMessage: true });
+      console.log(errMsg);
+    });
+                 
+      
+        } 
 }

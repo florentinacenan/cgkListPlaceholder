@@ -58,11 +58,11 @@ $username = "florentinac@cgk.onmicrosoft.com"
 $password = Read-Host -Prompt "Enter your password: " -AsSecureString
 $ctx = New-Object Microsoft.SharePoint.Client.ClientContext($webUrl)
 $ctx.Credentials = New-Object Microsoft.SharePoint.Client.SharePointOnlineCredentials($username,$password)
-$allProperties = $ctx.Site.RootWeb.AllProperties
+$allProperties = $ctx.Web.AllProperties
 $ctx.Load($allProperties)
 $ctx.ExecuteQuery()
-$allProperties['CGKListQueueEndpoint']= "https://dummyAzureEndpointUrl"
-$ctx.Site.RootWeb.Update()
+$allProperties['CGKListStatus']= "actief"
+$ctx.Web.Update()
 $ctx.ExecuteQuery()
 ```
 

@@ -6,6 +6,7 @@ declare interface ICgkListPlaceholderApplicationCustomizerStrings {
   ArchiveButton:string;
   SuccessMessage:string;
   FailMessage:string;
+  SiteIsArchivedMessage:string;
 }
 
 declare module 'CgkListPlaceholderApplicationCustomizerStrings' {

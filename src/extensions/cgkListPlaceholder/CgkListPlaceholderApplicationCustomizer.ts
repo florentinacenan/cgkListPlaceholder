@@ -52,20 +52,25 @@ export default class CgkListPlaceholderApplicationCustomizer
   @override
   public onInit(): Promise<void> {
     Log.info(LOG_SOURCE, `Initialized ${strings.Title}`);
-    var cgkListUrl; 
-    //Check the Permissions and webProperties
+        //Check the Permissions and webProperties
     console.log('The web template for this site is: ' + this.context.pageContext.web.templateName.toString());
     console.log('This user has ManageWeb permission on this web: ' + this.context.pageContext.web.permissions.hasPermission(SPPermission.manageWeb));
     var tenantRoot = this.context.pageContext.site.absoluteUrl.replace(this.context.pageContext.site.serverRelativeUrl,"");
     console.log(tenantRoot);
-    this.context.spHttpClient.get(`${this.context.pageContext.web.absoluteUrl}/_api/web/AllProperties?$select=CGK_WEBCONNECTION`,
+    this.context.spHttpClient.get(`${this.context.pageContext.web.absoluteUrl}/_api/web/AllProperties`,
       SPHttpClient.configurations.v1)
       .then((response: SPHttpClientResponse) => {
         response.json().then((responseJSON: any) => {
           console.log(responseJSON);
-          if (this.context.pageContext.web.permissions.hasPermission(SPPermission.manageWeb) && responseJSON['CGK_x005f_WEBCONNECTION'] != null) {
-            // cgkListUrl = responseJSON['CGK_x005f_WEBCONNECTION'];
-
+          var hasPermission = false;
+          var cgkListStatus;
+          var cgkListUrl;
+          if(responseJSON['CGKListStatus'] != null)
+          {
+           cgkListStatus = responseJSON['CGKListStatus'];
+          }
+          if (this.context.pageContext.web.permissions.hasPermission(SPPermission.manageWeb) && responseJSON['CGK_x005f_WEBCONNECTION'] != null ) {
+            hasPermission = true;        
             this.context.spHttpClient.get(tenantRoot + `/_api/web/AllProperties?$select=CGKListQueueEndpoint`,
             SPHttpClient.configurations.v1)
             .then((response: SPHttpClientResponse) => {
@@ -73,24 +78,14 @@ export default class CgkListPlaceholderApplicationCustomizer
                 console.log(responseJSON);
                 if (responseJSON['CGKListQueueEndpoint'] != null) {
                   console.log(responseJSON['CGKListQueueEndpoint']);
-                  cgkListUrl = responseJSON['CGKListQueueEndpoint'];
-                  // Added to handle possible changes on the existence of placeholders.
-                  //this.context.placeholderProvider.changedEvent.add(this, this._renderPlaceHolders;            
-                  // Call render method for generating the HTML elements.
-                  this._renderPlaceHolders(cgkListUrl);
-      
+                  cgkListUrl = responseJSON['CGKListQueueEndpoint'];                        
+                  
                 }
               });
             }); 
-
-
-
-            // Added to handle possible changes on the existence of placeholders.
-            //this.context.placeholderProvider.changedEvent.add(this, this._renderPlaceHolders;            
-            // Call render method for generating the HTML elements.
-            // this._renderPlaceHolders(cgkListUrl);
-
+      
           }
+          this._renderPlaceHolders(cgkListUrl, cgkListStatus, hasPermission);
         });
       });
 
@@ -98,7 +93,7 @@ export default class CgkListPlaceholderApplicationCustomizer
     return Promise.resolve<void>();
   }
 
-  private _renderPlaceHolders(cgkListUrl): void {
+  private _renderPlaceHolders(cgkListUrl, cgkListStatus, hasPermission): void {
 
 
     console.log('CGKListHeaderApplicationCustomizer._renderPlaceHolders()');
@@ -123,7 +118,9 @@ export default class CgkListPlaceholderApplicationCustomizer
           CGKListUIContextualMenuIconExample,
           {
             context: this.context,
-            cgkListUrlEndpoint: cgkListUrl
+            cgkListUrlEndpoint: cgkListUrl,
+            cgkListStatus: cgkListStatus,
+            hasPermission: hasPermission
 
           }
         );

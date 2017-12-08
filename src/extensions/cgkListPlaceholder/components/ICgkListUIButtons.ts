@@ -6,10 +6,15 @@ export interface ICgkListUIButtonsProps
 { 
     context: ApplicationCustomizerContext;
     cgkListUrlEndpoint: string;
+    cgkListStatus:string;
+    hasPermission: boolean;
 }
 
 export interface ICgkListUIButtonsState {
     showMessage: boolean ;
     message:string;
+    cgkListStatus:string;
+    greyButton:boolean;
+    hasPermission: boolean;
   }
   
