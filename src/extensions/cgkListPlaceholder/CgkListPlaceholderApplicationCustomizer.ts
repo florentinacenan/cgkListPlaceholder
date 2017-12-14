@@ -57,35 +57,37 @@ export default class CgkListPlaceholderApplicationCustomizer
     console.log('This user has ManageWeb permission on this web: ' + this.context.pageContext.web.permissions.hasPermission(SPPermission.manageWeb));
     var tenantRoot = this.context.pageContext.site.absoluteUrl.replace(this.context.pageContext.site.serverRelativeUrl,"");
     console.log(tenantRoot);
-    this.context.spHttpClient.get(`${this.context.pageContext.web.absoluteUrl}/_api/web/AllProperties`,
+    this.context.spHttpClient.get(`${this.context.pageContext.web.absoluteUrl}/_api/web/AllProperties?$select=CGK_WEBCONNECTION,CGKListStatus`,
       SPHttpClient.configurations.v1)
       .then((response: SPHttpClientResponse) => {
         response.json().then((responseJSON: any) => {
           console.log(responseJSON);
           var hasPermission = false;
           var cgkListStatus;
-          var cgkListUrl;
+          var cgkListUrl= "test";
           if(responseJSON['CGKListStatus'] != null)
           {
-           cgkListStatus = responseJSON['CGKListStatus'];
+         cgkListStatus = responseJSON['CGKListStatus'];
           }
-          if (this.context.pageContext.web.permissions.hasPermission(SPPermission.manageWeb) && responseJSON['CGK_x005f_WEBCONNECTION'] != null ) {
-            hasPermission = true;        
+          if (this.context.pageContext.web.permissions.hasPermission(SPPermission.manageWeb) && responseJSON['CGK_x005f_WEBCONNECTION'] != null ) 
+          {
+            hasPermission = true; 
+          }
+                   
             this.context.spHttpClient.get(tenantRoot + `/_api/web/AllProperties?$select=CGKListQueueEndpoint`,
             SPHttpClient.configurations.v1)
-            .then((response: SPHttpClientResponse) => {
-              response.json().then((responseJSON: any) => {
-                console.log(responseJSON);
-                if (responseJSON['CGKListQueueEndpoint'] != null) {
-                  console.log(responseJSON['CGKListQueueEndpoint']);
-                  cgkListUrl = responseJSON['CGKListQueueEndpoint'];                        
+            .then((responseRoot: SPHttpClientResponse) => {
+              responseRoot.json().then((responseRootJSON: any) => {
+                console.log(responseRootJSON);
+                if (responseRootJSON['CGKListQueueEndpoint'] != null) {
+                  console.log(responseRootJSON['CGKListQueueEndpoint']);
+                  cgkListUrl = responseRootJSON['CGKListQueueEndpoint'];    
+                  this._renderPlaceHolders(cgkListUrl, cgkListStatus, hasPermission);                    
                   
                 }
               });
-            }); 
-      
-          }
-          this._renderPlaceHolders(cgkListUrl, cgkListStatus, hasPermission);
+            });  
+          
         });
       });
 

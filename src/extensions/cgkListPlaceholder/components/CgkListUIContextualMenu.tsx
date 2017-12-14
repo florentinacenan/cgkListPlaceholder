@@ -8,12 +8,14 @@ import * as React from 'react';import {
 } from '@microsoft/sp-http';
 import { ContextualMenuItemType } from 'office-ui-fabric-react/lib/ContextualMenu';
 import { Callout } from 'office-ui-fabric-react/lib/Callout';
-import { DefaultButton, IconButton, IButtonProps } from 'office-ui-fabric-react/lib/Button';
+import { DefaultButton, IconButton, IButtonProps, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
 import {ICgkListUIButtonsProps, ICgkListUIButtonsState} from './ICgkListUIButtons';
 import * as strings from 'CgkListPlaceholderApplicationCustomizerStrings';
 import { Link } from 'office-ui-fabric-react/lib/Link';
 import { Label } from 'office-ui-fabric-react/lib/Label';
 import { MessageBar, MessageBarType } from 'office-ui-fabric-react/lib/MessageBar';
+import { autobind } from 'office-ui-fabric-react/lib/Utilities';
+import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 
 
 export default class CGKListUIContextualMenuIconExample extends React.Component<ICgkListUIButtonsProps, ICgkListUIButtonsState> {
@@ -23,33 +25,39 @@ export default class CGKListUIContextualMenuIconExample extends React.Component<
     this.state = {
       showMessage: false,
       message:" ",
-      cgkListStatus:props.cgkListStatus,
       greyButton:false,
       hasPermission: props.hasPermission,
+      hideDialog:true,
     };
+    
   }
 
- public verifyCgkListStatus(cgkListStatus):void{
-switch(cgkListStatus)
+  componentWillMount()
+  {
+    this._verifyCgkListStatus();
+  }
+
+ public _verifyCgkListStatus():void{
+switch(this.props.cgkListStatus)
 {
   case 'actief':
     this.setState({ greyButton: false });
-    return;
+    break;
   case 'archief':
-    this.setState({ greyButton: true });
-    this.setState({ message: strings.SiteIsArchivedMessage });
-    this.setState({ showMessage: true });
+    this.setState({ greyButton: true, message: strings.SiteIsArchivedMessage, showMessage: true });
     console.log( strings.SiteIsArchivedMessage);
-    return;
-   
-
+    break;  
+    default:
+    this.setState({ greyButton: false });
+    break;
 }
 
  }
 
   public render() {
     let { showMessage } = this.state;
-    this.verifyCgkListStatus(this.props.cgkListStatus);
+    let  {hideDialog }=this.state;
+    //this.verifyCgkListStatus();
     if (this.state.hasPermission){
     return (
       <div>
@@ -64,30 +72,36 @@ switch(cgkListStatus)
                 key: strings.SaveButton,
                 onClick: () => {
                   //this.setState({ showMessage: true });
-                  this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"GetSite");
+                  //this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"GetSite");
+                  this._showDialog()
+                  //this.setState({ hideDialog: false });
                 },
                 iconProps: {
                   iconName: 'Pinned'
                 },
-                name: strings.SaveButton
+                name: strings.SaveButton,
+                disabled: this.state.greyButton
               },
               {
                 key: strings.UpgradeButton,
                 onClick: () => {
                   //this.setState({ showMessage: true });
-                  this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"UpgradeSite");                  
+                  // this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"UpgradeSite");
+                  this._showDialog()                  
                 },
                 iconProps: {
                   iconName: 'Pinned'
                 },
                 name: strings.UpgradeButton,
+                disabled: this.state.greyButton
                 
               },
               {
                 key: strings.ArchiveButton,
                 onClick: () => {
                   //this.setState({ showMessage: true });
-                  this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"ArchiveSite");
+                  //this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"ArchiveSite");
+                  this._showDialog()
                 },
                 iconProps: {
                   iconName: 'Pinned'                 
@@ -106,6 +120,31 @@ switch(cgkListStatus)
             {this.state.message}}      
           </MessageBar>
         ) }
+        
+        <Dialog
+          hidden={ this.state.hideDialog }
+          onDismiss={ this._closeDialog }
+          dialogContentProps={ {
+            type: DialogType.normal,
+            title: 'Are you sure',
+            subText: 'You are about to save this site as a template. To proceed click yes, to cancel click no'
+          } }
+          modalProps={ {
+            titleAriaId: 'myLabelId',
+            subtitleAriaId: 'mySubTextId',
+            isBlocking: false,
+            containerClassName: 'ms-dialogMainOverride'
+          } }
+        >
+          
+          <DialogFooter>
+            <PrimaryButton onClick={ ()=>
+            this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"ArchiveSite")
+              } text='Yes' />
+            <DefaultButton onClick={ this._closeDialog } text='No' />
+          </DialogFooter>
+        </Dialog>
+      
       </div>
     );
   }
@@ -124,6 +163,16 @@ switch(cgkListStatus)
   }
   }
 
+  @autobind
+  private _showDialog() {
+    this.setState({ hideDialog: false });
+  }
+
+  @autobind
+  private _closeDialog() {
+    this.setState({ hideDialog: true });
+  }
+
      private _callCGkListAzureEndpoint(context,cgkListUrl,action):void{
       console.log("Clicked "+action+" button");    
       var url = context.pageContext.web.absoluteUrl;    
@@ -134,10 +183,12 @@ switch(cgkListStatus)
           this.setState({ message: strings.SuccessMessage });
           this.setState({ showMessage: true });
           console.log(strings.SuccessMessage);
+          this._closeDialog();
       } 
         else {
         this.setState({ message: strings.FailMessage });
         this.setState({ showMessage: true });
+        this._closeDialog();
         console.log(response.statusText + strings.FailMessage);
       }
       

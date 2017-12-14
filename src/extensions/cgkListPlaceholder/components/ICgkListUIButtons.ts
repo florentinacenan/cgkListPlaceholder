@@ -13,8 +13,9 @@ export interface ICgkListUIButtonsProps
 export interface ICgkListUIButtonsState {
     showMessage: boolean ;
     message:string;
-    cgkListStatus:string;
+    // cgkListStatus:string;
     greyButton:boolean;
     hasPermission: boolean;
+    hideDialog:boolean;
   }
   
