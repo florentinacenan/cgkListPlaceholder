@@ -9,6 +9,8 @@ define([], function() {
     "FailMessage" : "Fail message in Dutch",
     "SiteIsArchivedMessage":"Site is archived message in Dutch",
     "ModalMessageArchive":"U staat op het punt om deze site te archiveren. Deze site zal nadien voor iedereen enkel beschikbaar zijn in leesmodus.Bent u zeker?",
+    "ModalMessageSave":"Save Site message in Dutch",
+    "ModalMessageUpdate":"Update Site message in Dutch",
 
   }
 });

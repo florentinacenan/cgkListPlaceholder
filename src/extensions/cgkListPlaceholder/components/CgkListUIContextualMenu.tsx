@@ -1,4 +1,5 @@
-import * as React from 'react';import {
+import * as React from 'react';
+import {
   SPHttpClient,
   SPHttpClientConfiguration,
   SPHttpClientResponse,
@@ -16,7 +17,10 @@ import { Label } from 'office-ui-fabric-react/lib/Label';
 import { MessageBar, MessageBarType } from 'office-ui-fabric-react/lib/MessageBar';
 import { autobind } from 'office-ui-fabric-react/lib/Utilities';
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
-
+import styles from '../AppCustomizer.module.scss';
+import { loadStyles } from '@microsoft/load-themed-styles'; 
+import { Icon } from 'office-ui-fabric-react/lib/Icon';
+import { mergeStyles, registerIcons } from '@uifabric/styling';
 
 export default class CGKListUIContextualMenuIconExample extends React.Component<ICgkListUIButtonsProps, ICgkListUIButtonsState> {
 
@@ -27,12 +31,14 @@ export default class CGKListUIContextualMenuIconExample extends React.Component<
       message:" ",
       greyButton:false,
       hasPermission: props.hasPermission,
-      hideDialog:true,
+      hideDialogArchive:true,
+      hideDialogSave:true,
+      hideDialogUpdate:true,
     };
     
   }
 
-  componentWillMount()
+   componentWillMount()
   {
     this._verifyCgkListStatus();
   }
@@ -56,15 +62,26 @@ switch(this.props.cgkListStatus)
 
   public render() {
     let { showMessage } = this.state;
-    let  {hideDialog }=this.state;
+    let  {hideDialogArchive, hideDialogSave,hideDialogUpdate }=this.state;
     //this.verifyCgkListStatus();
     if (this.state.hasPermission){
     return (
-      <div>
-        <DefaultButton
-        
+      <div className="${styles.app}">
+      <div className="ms-bgColor-themeDark ms-fontColor-white ${styles.top}" >
+      <div id="CGKBarMessage" style={{float:'left'}}>
+      { showMessage && (
+          <MessageBar            
+            onDismiss={ () => this.setState({ showMessage: false })} 
+            onClick={ () => this.setState({ showMessage: false }) } >
+            {this.state.message}}      
+          </MessageBar>
+        ) }
+        </div>  
+        <div id="CGKContextMenu" style={{float:'right'}}>
+        <DefaultButton        
           id='ContextualMenuButton2'
           text = {strings.RootButton.toString()}
+          
           menuProps={ {
             shouldFocusOnMount: true,
             items: [
@@ -73,7 +90,7 @@ switch(this.props.cgkListStatus)
                 onClick: () => {
                   //this.setState({ showMessage: true });
                   //this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"GetSite");
-                  this._showDialog()
+                  this.setState({ hideDialogSave: false });
                   //this.setState({ hideDialog: false });
                 },
                 iconProps: {
@@ -87,11 +104,14 @@ switch(this.props.cgkListStatus)
                 onClick: () => {
                   //this.setState({ showMessage: true });
                   // this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"UpgradeSite");
-                  this._showDialog()                  
+                  this.setState({ hideDialogUpdate: false });                 
                 },
-                iconProps: {
-                  iconName: 'Pinned'
-                },
+                // iconProps: {
+                  
+                //   iconName: '../icons/save.png'
+                  
+                // },
+                iconImageUrl: 'http://localhost:4321/icons/save.png',
                 name: strings.UpgradeButton,
                 disabled: this.state.greyButton
                 
@@ -101,7 +121,7 @@ switch(this.props.cgkListStatus)
                 onClick: () => {
                   //this.setState({ showMessage: true });
                   //this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"ArchiveSite");
-                  this._showDialog()
+                  this._showDialog();
                 },
                 iconProps: {
                   iconName: 'Pinned'                 
@@ -112,22 +132,16 @@ switch(this.props.cgkListStatus)
             ]
           }
           }
-        />
-        { showMessage && (
-          <MessageBar            
-            onDismiss={ () => this.setState({ showMessage: false })} 
-            onClick={ () => this.setState({ showMessage: false }) } >
-            {this.state.message}}      
-          </MessageBar>
-        ) }
-        
-        <Dialog
-          hidden={ this.state.hideDialog }
-          onDismiss={ this._closeDialog }
+        /> 
+        </div>    
+        <div className="ms-bgColor-theme ms-fontColor-white ${styles}" id="CGKDialog" >
+        <Dialog className="ms-bgColor-theme ms-fontColor-white ${styles}"       
+          hidden={ this.state.hideDialogArchive }
+          onDismiss={ ()=>this.setState({ hideDialogArchive: true }) }
           dialogContentProps={ {
             type: DialogType.normal,
             title: 'Are you sure',
-            subText: 'You are about to save this site as a template. To proceed click yes, to cancel click no'
+            subText: strings.ModalMessageArchive,
           } }
           modalProps={ {
             titleAriaId: 'myLabelId',
@@ -135,16 +149,67 @@ switch(this.props.cgkListStatus)
             isBlocking: false,
             containerClassName: 'ms-dialogMainOverride'
           } }
-        >
-          
-          <DialogFooter>
-            <PrimaryButton onClick={ ()=>
+        >          
+          <DialogFooter className="ms-bgColor-theme ms-fontColor-white ${styles}">
+            <PrimaryButton className="ms-bgColor-themeDark ms-fontColor-white ${styles}" onClick={ ()=>
             this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"ArchiveSite")
               } text='Yes' />
-            <DefaultButton onClick={ this._closeDialog } text='No' />
+            <DefaultButton onClick={ ()=>this.setState({ hideDialogArchive: true }) } text='No' />
           </DialogFooter>
         </Dialog>
+        </div>
+
+        <div className="ms-bgColor-theme ms-fontColor-white ${styles}" id="CGKDialog" >
+        <Dialog className="ms-bgColor-theme ms-fontColor-white ${styles}"       
+          hidden={ this.state.hideDialogSave }
+          onDismiss={ ()=>this.setState({ hideDialogSave: true }) }
+          dialogContentProps={ {
+            type: DialogType.normal,
+            title: 'Are you sure',
+            subText: strings.ModalMessageSave
+          } }
+          modalProps={ {
+            titleAriaId: 'myLabelId',
+            subtitleAriaId: 'mySubTextId',
+            isBlocking: false,
+            containerClassName: 'ms-dialogMainOverride'
+          } }
+        >          
+          <DialogFooter className="ms-bgColor-theme ms-fontColor-white ${styles}">
+            <PrimaryButton className="ms-bgColor-themeDark ms-fontColor-white ${styles}" onClick={ ()=>
+            this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"GetSite")
+              } text='Yes' />
+            <DefaultButton onClick={ ()=>this.setState({ hideDialogSave: true }) } text='No' />
+          </DialogFooter>
+        </Dialog>
+        </div>
+
+        <div className="ms-bgColor-theme ms-fontColor-white ${styles}" id="CGKDialog" >
+        <Dialog className="ms-bgColor-theme ms-fontColor-white ${styles}"       
+          hidden={ this.state.hideDialogUpdate}
+          onDismiss={ ()=>this.setState({ hideDialogUpdate: true })}
+          dialogContentProps={ {
+            type: DialogType.normal,
+            title: 'Are you sure',
+            subText: strings.ModalMessageUpdate,
+          } }
+          modalProps={ {
+            titleAriaId: 'myLabelId',
+            subtitleAriaId: 'mySubTextId',
+            isBlocking: false,
+            containerClassName: 'ms-dialogMainOverride'
+          } }
+        >          
+          <DialogFooter className="ms-bgColor-theme ms-fontColor-white ${styles}">
+            <PrimaryButton className="ms-bgColor-themeDark ms-fontColor-white ${styles}" onClick={ ()=>
+            this._callCGkListAzureEndpoint(this.props.context,this.props.cgkListUrlEndpoint,"UpdateSite")
+              } text='Yes' />
+            <DefaultButton onClick={ ()=>this.setState({ hideDialogUpdate: true }) } text='No' />
+          </DialogFooter>          
+        </Dialog>
+      </div>      
       
+        </div>
       </div>
     );
   }
@@ -157,6 +222,7 @@ switch(this.props.cgkListStatus)
             {this.state.message}}      
           </MessageBar>
         ) }
+        
       </div>
     );
 
@@ -165,12 +231,14 @@ switch(this.props.cgkListStatus)
 
   @autobind
   private _showDialog() {
-    this.setState({ hideDialog: false });
+    this.setState({ hideDialogArchive: false });
   }
 
   @autobind
   private _closeDialog() {
-    this.setState({ hideDialog: true });
+    this.setState({ hideDialogArchive: true, hideDialogSave:true,hideDialogUpdate:true });
+
+   
   }
 
      private _callCGkListAzureEndpoint(context,cgkListUrl,action):void{

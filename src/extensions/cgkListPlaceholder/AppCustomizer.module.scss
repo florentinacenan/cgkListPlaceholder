@@ -1,6 +1,5 @@
  .app { 
- /*@import '/node_modules/office-ui-fabric/dist/css/fabric.components.min.css';
- @import'/node_modules/office-ui-fabric/dist/css/fabric.min.css';*/
+
        .top {
           height:60px;
           text-align:center;
@@ -28,4 +27,25 @@
             color:white;
             background-color: gray;
           }
+          
  }
+
+
+//#CGKBar{
+ // display:inline-block;
+//}
+ #CGKBarMessage{
+  //display:inline-block;
+  // position: absolute;
+  // left: 0px;
+ }
+ #CGKContextMenu {
+  //display:inline-block;
+  // position: absolute;
+  // right: 0px;
+  float:right !important;
+}
+#CGKDialog{
+  background-color: "[theme:themePrimary, default:#0078d7]";
+  color: "[theme:white, default:white]"
+}

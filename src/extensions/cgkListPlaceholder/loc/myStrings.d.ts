@@ -8,6 +8,8 @@ declare interface ICgkListPlaceholderApplicationCustomizerStrings {
   FailMessage:string;
   SiteIsArchivedMessage:string;
   ModalMessageArchive:string;
+  ModalMessageSave:string;
+  ModalMessageUpdate:string;
 }
 
 declare module 'CgkListPlaceholderApplicationCustomizerStrings' {

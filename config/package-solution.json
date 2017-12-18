@@ -3,7 +3,7 @@
   "solution": {
     "name": "cgk-list-placeholder-client-side-solution",
     "id": "8612ad9c-8fd7-44f6-9655-99e2ff847a2f",
-    "version": "1.0.0.5",
+    "version": "1.0.0.6",
     "features": [
       {
         "title": "CGKListPlaceholder Application Extension - Deployment of CGKList Header Actions.",

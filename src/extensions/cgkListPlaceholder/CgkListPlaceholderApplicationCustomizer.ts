@@ -122,9 +122,8 @@ export default class CgkListPlaceholderApplicationCustomizer
             context: this.context,
             cgkListUrlEndpoint: cgkListUrl,
             cgkListStatus: cgkListStatus,
-            hasPermission: hasPermission
-
-          }
+            hasPermission: hasPermission,
+            }
         );
         ReactDOM.render(element, this._topPlaceholder.domElement);
       }      

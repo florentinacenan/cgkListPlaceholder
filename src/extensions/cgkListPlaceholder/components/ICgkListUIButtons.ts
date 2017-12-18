@@ -16,6 +16,8 @@ export interface ICgkListUIButtonsState {
     // cgkListStatus:string;
     greyButton:boolean;
     hasPermission: boolean;
-    hideDialog:boolean;
+    hideDialogArchive:boolean;
+    hideDialogSave:boolean;
+    hideDialogUpdate:boolean;
   }
   
