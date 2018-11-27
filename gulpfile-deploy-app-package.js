@@ -5,7 +5,7 @@ const sppkgDeploy = require('node-sppkg-deploy');
 
 const environmentInfo = {
   "username": "florentinac@cgk.onmicrosoft.com",
-  "password": "Flopo15g",
+  "password": "ENTER YOUR PASSWORD HERE",
   "tenant": "cgk",
   "catalogSite": "sites/AppCatalog"
 };
